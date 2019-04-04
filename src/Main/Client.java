@@ -358,7 +358,7 @@ public class Client {
     public static ArrayList<String> jsonArrayToArrayList(JsonObject jsonMovie, String arrayName) {
         ArrayList<String> newArray = new ArrayList<>();         //initialise arraylist
         JsonArray jsonArray = jsonMovie.getJsonArray(arrayName);  //extract array from json 
-        for (JsonValue jsonArr : jsonArray)
+          for (JsonValue jsonArr : jsonArray)
         {
             newArray.add(jsonArr.toString());               // adds to the arraylist from the json array
         }
@@ -398,9 +398,28 @@ public class Client {
     }
 
     public static String printMovieReturn(JsonObject jsonMovie) {
-        return "Title: " + jsonMovie.getString("title") + ", Genres: " + jsonMovie.getJsonArray("genre") + ", Starring: " + jsonMovie.getJsonArray("starring") + ", Runtime: " + jsonMovie.getString("runtime")
+      String genre="";
+      String starring="";
+        for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "genre").size(); i++){
+            genre = genre + jsonArrayToArrayList(jsonMovie, "genre").get(i);
+            
+            if(jsonArrayToArrayList(jsonMovie, "genre").size()>i-1){
+                genre= genre + ", ";
+            }
+        }
+        for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "starring").size(); i++){
+          starring = starring + jsonArrayToArrayList(jsonMovie, "starring").get(i);
+            
+            if(jsonArrayToArrayList(jsonMovie, "starring").size()>i-1){
+                starring= starring + ", ";
+            }
+            
+        }
+        return "Title: " + jsonMovie.getString("title") + ", Genres: " + genre + ", Starring: " + starring + ", Runtime: " + jsonMovie.getString("runtime")
                 + ", Director: " + jsonMovie.getString("director") + ", Rating: " + jsonMovie.getString("rating") + ", Copies: " + jsonMovie.getString("copies") + ", User rating: " + jsonMovie.getString("user_rating");
     }
+        
+
 
     public static ArrayList<String> userCommands() {
 
