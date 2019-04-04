@@ -401,21 +401,16 @@ public class Client {
       String genre="";
       String starring="";
         for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "genre").size(); i++){
-            genre = genre + jsonArrayToArrayList(jsonMovie, "genre").get(i);
+            genre = genre + jsonArrayToArrayList(jsonMovie, "genre").get(i)
+            + ", ";
             
-            if(jsonArrayToArrayList(jsonMovie, "genre").size()>i-1){
-                genre= genre + ", ";
-            }
         }
         for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "starring").size(); i++){
-          starring = starring + jsonArrayToArrayList(jsonMovie, "starring").get(i);
-            
-            if(jsonArrayToArrayList(jsonMovie, "starring").size()>i-1){
-                starring= starring + ", ";
-            }
+          starring = starring + jsonArrayToArrayList(jsonMovie, "starring").get(i)
+                  + ", ";
             
         }
-        return "Title: " + jsonMovie.getString("title") + ", Genres: " + genre + ", Starring: " + starring + ", Runtime: " + jsonMovie.getString("runtime")
+        return "Title: " + jsonMovie.getString("title") + ", Genres: " + genre + " Starring: " + starring + " Runtime: " + jsonMovie.getString("runtime")
                 + ", Director: " + jsonMovie.getString("director") + ", Rating: " + jsonMovie.getString("rating") + ", Copies: " + jsonMovie.getString("copies") + ", User rating: " + jsonMovie.getString("user_rating");
     }
         
