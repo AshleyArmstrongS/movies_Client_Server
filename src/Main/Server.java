@@ -134,18 +134,22 @@ public class Server {
                             // deletes a movie from the database
                             case "DELETEBYID":
                                 returnToClient = deletebyId(cacheMap, fromClient, IMovieDao);
+                                cacheMap.clearCache();
                                 break;
                             // adds a movie to the database
                             case "ADDMOVIE":
                                 returnToClient = addNewMovie(cacheMap, fromClient, IMovieDao);
+                                cacheMap.clearCache();
                                 break;
                             // updates an exsisting movie in the database, is the second call made in updating a movie
                             case "UPDATEMOVIETWO":
                                 returnToClient = updateMovie(cacheMap, fromClient, IMovieDao);
+                                cacheMap.clearCache();
                                 break;
                             // adds a movie/user to the watchedmovies table
                             case "WATCH":
                                 returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
+                                cacheMap.clearCache();
                                 break;
                             case "FINDBYGENRES":
                                 returnToClient = runMultiFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
