@@ -148,10 +148,10 @@ public class Server {
                                 returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
                                 break;
                             case "FINDBYGENRES":
-                                returnToClient = runMultiFindBys(fromClient, IMovieDao);
+                                returnToClient = runMultiFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
                                 break;
                             case "FINDBYGENRETHENDIRECTOR":
-                                returnToClient = runMultiFindBys(fromClient, IMovieDao);
+                                returnToClient = runMultiFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
                                 break;
                             default:
                                 returnToClient = runFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
@@ -287,12 +287,19 @@ public class Server {
         }
     }
 
-    public static String runMultiFindBys(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
+    public static String runMultiFindBys(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException {
         String serverCommand = fromClient.getString("serverCommand");                  //get find by type
         String findByVariable1 = fromClient.getString("findByVariable1").trim();
         String findByVariable2 = fromClient.getString("findByVariable2").trim();         //get variable to find by
         String movie = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
 
+        if (c.checkCache(fromClient.toString()))
+        {
+            System.out.println("Got from cache");
+            return (String) c.returnFromCache(fromClient.toString());
+        }
+        else
+        {
             switch (serverCommand)
             {
                 case "FINDBYGENRES":
@@ -302,6 +309,8 @@ public class Server {
                     movie = findByGenreThenDirector(findByVariable1, findByVariable2, IMovieDao);
                     break;
             }
+        }
+        c.addToCache(fromClient.toString(), movie);
         return movie;
     }
 
