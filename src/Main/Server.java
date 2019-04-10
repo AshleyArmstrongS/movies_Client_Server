@@ -331,7 +331,7 @@ public class Server {
         }
     }
 
-    public static String findByGenreThenDirector(String findByVariable1, String findByVariable2,MovieDaoInterface IMovieDao) throws DaoException {
+    public static String findByGenreThenDirector(String findByVariable1, String findByVariable2, MovieDaoInterface IMovieDao) throws DaoException {
 
         List<Movie> movies = IMovieDao.findMoviesByGenreThenDirector(findByVariable1, findByVariable2); //gets the movies
         if (!movies.isEmpty())                                                  //checks if the list is empty

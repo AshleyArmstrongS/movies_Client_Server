@@ -124,6 +124,21 @@ public class Client {
         String starringString = in.nextLine();
         System.out.println("copies");
         String copies = in.nextLine();
+        boolean isInt = false;
+        while (!isInt)
+        {
+            try
+            {
+                Integer.parseInt(copies);
+                isInt = true;
+
+            } catch (NumberFormatException | NullPointerException nfe)
+            {
+                System.out.println("Please enter an integer");
+                copies = in.nextLine();
+            }
+        }
+
         System.out.println("user-rating");
         String userRating = in.next();
 
@@ -133,7 +148,8 @@ public class Client {
         String[] starringArray = starringString.split(",");                         // splits up the stars into an array allowing them to be added into an arraylist
         ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray)); // puts the stars into an arraylist so it can be parsed by the jsonMovieFormatter
 
-        return jsonMovieFormatter("ADDMOVIE", null, title, genre, director, runtime, rating, starring, copies, userRating); // returns the movie, the function name and null for Id as it is not used for add
+        return jsonMovieFormatter(
+                "ADDMOVIE", null, title, genre, director, runtime, rating, starring, copies, userRating); // returns the movie, the function name and null for Id as it is not used for add
     }
 
     public static void runUpdateMovie(Socket socket) throws IOException {
@@ -155,7 +171,7 @@ public class Client {
             if (jsonReturn.getString("type").equals("movie"))
             {
                 socketWriter.flush();
-                String sendToserver = updateMovieTwo(jsonReturn);
+                sendToServer = updateMovieTwo(jsonReturn);
                 socketWriter.println(sendToServer);
                 inValidReturn = false;
             }
@@ -242,6 +258,19 @@ public class Client {
         }
         System.out.println("Please enter copies");
         inputString = sc.nextLine();
+        boolean isInt = false;
+        while (!isInt)
+        {
+            try
+            {
+                Integer.parseInt(inputString);
+                isInt = true;
+            } catch (NumberFormatException | NullPointerException nfe)
+            {
+                System.out.println("Please enter an integer");
+                copies = sc.nextLine();
+            }
+        }
         if (!inputString.equals(""))
         {
             copies = inputString;
