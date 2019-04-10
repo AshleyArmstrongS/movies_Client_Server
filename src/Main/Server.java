@@ -2,10 +2,10 @@ package Main;
 
 import DTOs.Movie;
 import DTOs.MoviesWatched;
-import Daos.MySqlMovieDao;
-import Daos.MovieDaoInterface;
-import Daos.MoviesWatchedDaoInterface;
-import Daos.MySqlMoviesWatchedDao;
+import DAOs.MySqlMovieDao;
+import DAOs.MovieDaoInterface;
+import DAOs.MoviesWatchedDaoInterface;
+import DAOs.MySqlMoviesWatchedDao;
 import Exceptions.DaoException;
 import java.io.BufferedReader;
 import java.io.IOException;
