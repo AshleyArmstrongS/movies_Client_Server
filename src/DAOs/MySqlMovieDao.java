@@ -36,13 +36,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
@@ -109,19 +105,14 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
             rs = ps.executeQuery();
             while (rs.next())
             {
-                int movie = rs.getInt("id");
                 int id = rs.getInt("id");
                 String title = rs.getString("title");
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
@@ -193,13 +184,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
@@ -269,13 +256,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
@@ -348,13 +331,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
@@ -430,13 +409,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                String[] genreArray = genreString.split(",");
@@ -511,13 +486,9 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String genreString = rs.getString("genre");
                 String director = rs.getString("director");
                 String runtime = rs.getString("runtime");
-                String plot = rs.getString("plot");
                 String rating = rs.getString("rating");
-                String format = rs.getString("format");
-                String year = rs.getString("year");
                 String starringString = rs.getString("starring");
                 int copies = rs.getInt("copies");
-                String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
