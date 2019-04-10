@@ -45,7 +45,7 @@ public class Client {
                     System.out.print(" : " + c + " : ");
                 }
                 System.out.println("Please enter a command: ");
-                String userCommandInput = in.nextLine();
+                String userCommandInput = in.nextLine().toUpperCase();
                 if (userCommands.contains(userCommandInput))        //compares the user value with an arraylist of values to ensure its valid
                 {
                     switch (userCommandInput)
@@ -68,7 +68,7 @@ public class Client {
                         case "FINDBYGENRES":
                             runFindByMultiple(socket, userCommandInput);        //runs the method to find movies by more than one variable
                             break;
-                        case "FINDBYGENRESTHENDIRECTOR":
+                        case "FINDBYGENRETHENDIRECTOR":
                             runFindByMultiple(socket, userCommandInput);                                  //runs the method to find movies by more than one variable
                             break;
                         case "DELETEBYID":
@@ -285,7 +285,7 @@ public class Client {
         System.out.println("Enter the variable to find by");
         String findByVariable2 = in.nextLine();                      //takes in variable used to identify the movie i.e(id,title)
 
-        String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable1\": \"" + findByVariable1 + "\",\"findByVariable1\": \"" + findByVariable2 + "\"}"; //create json string, is short so no need for a formatter
+        String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable1\": \"" + findByVariable1 + "\",\"findByVariable2\": \"" + findByVariable2 + "\"}"; //create json string, is short so no need for a formatter
         socketWriter.println(sendToServer);                         //sends the json to the server
     }
 
@@ -431,7 +431,7 @@ public class Client {
         userCommands.add("GETWATCHED");
         userCommands.add("FINDBYGENRE");
         userCommands.add("FINDBYGENRES");
-        userCommands.add("FINDBYGENRESTHENDIRECTOR");
+        userCommands.add("FINDBYGENRETHENDIRECTOR");
 
         userCommands.add("DELETEBYID");//deletes
         userCommands.add("DELETEBYTITLE");
