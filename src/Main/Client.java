@@ -45,7 +45,7 @@ public class Client {
                     System.out.print(" : " + c + " : ");
                 }
                 System.out.println("Please enter a command: ");
-                String userCommandInput = in.nextLine().toUpperCase();
+                String userCommandInput = in.nextLine().toUpperCase().trim();
                 if (userCommands.contains(userCommandInput))        //compares the user value with an arraylist of values to ensure its valid
                 {
                     switch (userCommandInput)
