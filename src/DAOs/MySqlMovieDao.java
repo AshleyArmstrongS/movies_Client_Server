@@ -46,7 +46,18 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
@@ -114,7 +125,19 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
+                
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
@@ -180,7 +203,18 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
@@ -245,7 +279,18 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
@@ -313,7 +358,18 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
                 System.out.println(genre);
@@ -383,8 +439,19 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String barcode = rs.getString("barcode");
                 String user_rating = rs.getString("user_rating");
 
-                String[] genreArray = genreString.split(",");
+               String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
@@ -454,7 +521,18 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
                 String user_rating = rs.getString("user_rating");
 
                 String[] genreArray = genreString.split(",");
+                
+                 for(int i =0; i<genreArray.length;i++)
+                {
+                genreArray[i] = genreArray[i].trim(); //removes spaces
+                }
+                 
                 String[] starringArray = starringString.split(",");
+                
+                for(int i =0; i<starringArray.length;i++)
+                {
+                starringArray[i] = starringArray[i].trim(); //removes spaces
+                }
                 ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
                 ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
 
