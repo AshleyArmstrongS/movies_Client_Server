@@ -8,29 +8,25 @@ package Main;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author racheldhc
- */
-public class Cache
+public class Cache<K,V>
 {
-    HashMap<String, String> cacheMap = new HashMap();
+    HashMap<K, V> cacheMap = new HashMap();
 
     
-    public void addToCache(String clientRequestInJson, String movieInJson)
+    public synchronized void addToCache(K clientRequestInJson, V movieInJson)
     {
         this.cacheMap.put(clientRequestInJson, movieInJson);
         System.out.println("added to cache");
     }
     
-    public void displayCache(){
-        for(Map.Entry<String,String> entry : cacheMap.entrySet())
+    public synchronized void displayCache(){
+        for(Map.Entry<K,V> entry : cacheMap.entrySet())
         {
             System.out.println(entry.getKey() + " = " + entry.getValue());
         } 
     }
 
-    public boolean checkCache(String key)
+    public synchronized boolean checkCache(String key)
     {
         if (cacheMap.isEmpty())
         {
@@ -45,7 +41,7 @@ public class Cache
         return false;
     }
     
-    public String returnFromCache(String clientRequestInJson)
+    public synchronized V returnFromCache(K clientRequestInJson)
     {
         return cacheMap.get(clientRequestInJson);
     }

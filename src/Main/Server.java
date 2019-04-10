@@ -29,21 +29,18 @@ import javax.json.JsonReader;
  *
  * @author Administrator
  */
-public class Server
-{
+public class Server {
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Server server = new Server();
         server.start();
     }
 
-    public void start()
-    {
+    public void start() {
         try
         {
-            Cache cacheMap = new Cache();
-            
+            Cache<String, String> cacheMap = new Cache();
+
             ServerSocket ss = new ServerSocket(8080);//set port
 
             System.out.println("Server: Server started. Listening for connections on port 8080...");
@@ -76,15 +73,14 @@ public class Server
 
     public class ClientHandler implements Runnable // each ClientHandler communicates with one Client
     {
+
         BufferedReader socketReader;
         PrintWriter socketWriter;
         Socket socket;
         int clientNumber;
         Cache cacheMap;
-        
 
-        public ClientHandler(Socket clientSocket, int clientNumber, Cache cacheMap)
-        {
+        public ClientHandler(Socket clientSocket, int clientNumber, Cache cacheMap) {
 
             try
             {
@@ -105,14 +101,14 @@ public class Server
         }
 
         @Override
-        public void run()
-        {
+        public void run() {
             String message;
             Boolean socketClose = false;
             try
             {
                 while ((message = socketReader.readLine()) != null)
                 {
+                    System.out.println(message);
                     /*
                     String is taken from the client in json format, all input contains a key called "serverCommand",
                     this selects the function on the server end.                  
@@ -121,39 +117,45 @@ public class Server
                     MovieDaoInterface IMovieDao = new MySqlMovieDao();
                     MoviesWatchedDaoInterface IMoviesWatchedDao = new MySqlMoviesWatchedDao();
 
-                    JsonObject fromClient = jsonFromString(message);    
+                    JsonObject fromClient = jsonFromString(message);
                     String serverCommand = fromClient.getString("serverCommand");//extracts the command given by the client
                     System.out.println(serverCommand);                          // prints the command from the client side to be used on the server
 
                     if (userCommands().contains(serverCommand))                 //checks if the given command is supported
                     {
 
-                        if (serverCommand.equals("CLOSESOCKET"))                // closes socket to end the server
+                        switch (serverCommand)
                         {
-                            socketClose = true;
-                            returnToClient = "{\"type\" : \"message\", \"message\" : \"Server Socket closed\"}";
-                        }
-
-                        else if (serverCommand.equals("DELETEBYID"))    // deletes a movie from the database
-                        {
-                            returnToClient = deletebyId(cacheMap, fromClient, IMovieDao);
-                        }
-                        else if (serverCommand.equals("ADDMOVIE"))              // adds a movie to the database
-                        {
-                            returnToClient = addNewMovie(cacheMap, fromClient, IMovieDao);
-                        }
-                        else if (serverCommand.equals("UPDATEMOVIETWO"))        // updates an exsisting movie in the database, is the second call made in updating a movie
-                        {
-                            returnToClient = updateMovie(cacheMap, fromClient, IMovieDao);
-                        }
-                        else if (serverCommand.equals("WATCH"))                 // adds a movie/user to the watchedmovies table
-                        {
-                            returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
-                        }
-                        else
-                        {
-
-                            returnToClient = runFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
+                            // closes socket to end the server
+                            case "CLOSESOCKET":
+                                socketClose = true;
+                                returnToClient = "{\"type\" : \"message\", \"message\" : \"Server Socket closed\"}";
+                                break;
+                            // deletes a movie from the database
+                            case "DELETEBYID":
+                                returnToClient = deletebyId(cacheMap, fromClient, IMovieDao);
+                                break;
+                            // adds a movie to the database
+                            case "ADDMOVIE":
+                                returnToClient = addNewMovie(cacheMap, fromClient, IMovieDao);
+                                break;
+                            // updates an exsisting movie in the database, is the second call made in updating a movie
+                            case "UPDATEMOVIETWO":
+                                returnToClient = updateMovie(cacheMap, fromClient, IMovieDao);
+                                break;
+                            // adds a movie/user to the watchedmovies table
+                            case "WATCH":
+                                returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
+                                break;
+                                case "FINDBYGENRES":
+                                returnToClient = findByGenres(fromClient, IMovieDao);
+                                break;
+                                case "FINDBYGENRESTHENDIRECTOR":
+                                returnToClient = findByGenresAndDirector(fromClient, IMovieDao);
+                                break;
+                            default:
+                                returnToClient = runFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
+                                break;
                         }
                         System.out.println(returnToClient);
                         socketWriter.println(returnToClient);
@@ -170,10 +172,7 @@ public class Server
                 {
                     socket.close();
                 }
-            } catch (IOException ex)
-            {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (DaoException ex)
+            } catch (IOException | DaoException ex)
             {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -181,17 +180,15 @@ public class Server
         }
     }
 
-    public static String runFindBys(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException
-    {
+    public static String runFindBys(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException {
         String serverCommand = fromClient.getString("serverCommand");                  //get find by type
         String findByVariable = fromClient.getString("findByVariable").trim();         //get variable to find by
         String movie = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
 
-       c.displayCache();
         if (c.checkCache(fromClient.toString()))
         {
             System.out.println("Got from cache");
-            return c.returnFromCache(fromClient.toString());
+            return (String) c.returnFromCache(fromClient.toString());
         }
         else
         {
@@ -220,13 +217,12 @@ public class Server
             }
             System.out.println("Got from database");
         }
-        
+
         c.addToCache(fromClient.toString(), movie);
         return movie;
     }
 
-    public static String findAllMovies(MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findAllMovies(MovieDaoInterface IMovieDao) throws DaoException {
         List<Movie> movies = IMovieDao.findAllMovies();                         //gets all movies from the db
 
         if (!movies.isEmpty())                                                  //checks if the list is empty
@@ -239,8 +235,7 @@ public class Server
         }
     }
 
-    public static String findByDirector(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findByDirector(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException {
         List<Movie> dMovies = IMovieDao.findMovieByDirector(findByVariable); //gets the movies
 
         if (!dMovies.isEmpty())                                                    //checks if the list is empty
@@ -253,8 +248,7 @@ public class Server
         }
     }
 
-    public static String findById(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findById(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException {
         Movie movie = IMovieDao.findMovieById(Integer.parseInt(findByVariable)); //gets the movie with the id
 
         if (movie != null)                                                      //checks if a movie was returned
@@ -267,8 +261,7 @@ public class Server
         }
     }
 
-    public static String findByGenre(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findByGenre(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException {
         List<Movie> movies = IMovieDao.findMoviesByGenre(findByVariable); //gets the movies
 
         if (!movies.isEmpty())                                                  //checks if the list is empty
@@ -281,8 +274,7 @@ public class Server
         }
     }
 
-    public static String findByTitle(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findByTitle(String findByVariable, MovieDaoInterface IMovieDao) throws DaoException {
         Movie movie = IMovieDao.findMovieByTitle(findByVariable);    //gets the movie
         if (movie != null)                                                      //checks if the movie was found
         {
@@ -295,8 +287,35 @@ public class Server
         }
     }
 
-    public static String updateMovie(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String findByGenres(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException{
+        String findByVariable1 = fromClient.getString("findByVariable1");
+        String findByVariable2 = fromClient.getString("findByVariable2");    
+                
+        List<Movie> movies = IMovieDao.findMoviesByGenres(findByVariable1,findByVariable2); //gets the movies
+         if (!movies.isEmpty())                                                  //checks if the list is empty
+        {
+            return jsonMovieArrayFormatter(movies);                             //returns as an array as multiple are likely to be returned
+        }
+        else
+        {
+            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genres " + findByVariable1 + "\" and \""+ findByVariable2 +"}";
+        }
+    }
+     public static String findByGenresAndDirector(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException{
+           String findByVariable1 = fromClient.getString("findByVariable1");
+        String findByVariable2 = fromClient.getString("findByVariable2");    
+                
+        List<Movie> movies = IMovieDao.findMoviesByGenreThenDirector(findByVariable1,findByVariable2); //gets the movies
+         if (!movies.isEmpty())                                                  //checks if the list is empty
+        {
+            return jsonMovieArrayFormatter(movies);                             //returns as an array as multiple are likely to be returned
+        }
+        else
+        {
+            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genres " + findByVariable1 + "\" and director\""+ findByVariable2 +"}";
+        } 
+    }
+    public static String updateMovie(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
         Movie m = jsonToMovie(fromClient, true);
         IMovieDao.updateMovie(m);                                               //runs the update on the movie
         Movie x = IMovieDao.findMovieById(m.getId());                           //gets the movie from the db
@@ -311,8 +330,7 @@ public class Server
         }
     }
 
-    public static String addNewMovie(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String addNewMovie(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
         Movie m = jsonToMovie(fromClient, false);
         IMovieDao.addMovie(m);
         if (findByTitle(m.getTitle(), IMovieDao) != null)
@@ -326,8 +344,7 @@ public class Server
         }
     }
 
-    public static String deletebyId(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String deletebyId(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
 
         int movieToDelete = Integer.parseInt(fromClient.getString("deleteByVariable"));//extracts the id of the movie to delete
         IMovieDao.deleteMovieById(movieToDelete);                               //deletes the movie from the db
@@ -342,7 +359,7 @@ public class Server
             return "{\"type\": \"message\", \"message\": \"Error movie " + fromClient.getString("deleteByVariable") + " not deleted, ensure id is correct\"}";
         }
     }
-    
+
     public static String deletebyTitle(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
 
         String movieToDelete = fromClient.getString("deleteByVariable");//extracts the title of the movie to delete
@@ -360,8 +377,7 @@ public class Server
         }
     }
 
-    public static String watch(JsonObject fromClient, MoviesWatchedDaoInterface IMoviesWatchedDao, MovieDaoInterface IMovieDao) throws DaoException
-    {
+    public static String watch(JsonObject fromClient, MoviesWatchedDaoInterface IMoviesWatchedDao, MovieDaoInterface IMovieDao) throws DaoException {
 
         String username = fromClient.getString("username");                     //takes in username
         String movieToWatch;
@@ -382,8 +398,7 @@ public class Server
         }
     }
 
-    public static String getWatchedMovies(String findByVariable, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException
-    {
+    public static String getWatchedMovies(String findByVariable, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException {
         String username = findByVariable;
 
         List<MoviesWatched> watched = IMoviesWatchedDao.getMoviesWatched(username);
@@ -403,8 +418,7 @@ public class Server
         }
     }
 
-    public static String recommend(String findByVariable, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException
-    {
+    public static String recommend(String findByVariable, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException {
         String username = findByVariable;
 
         //Gets movies watched in MoviesWatched format
@@ -461,8 +475,7 @@ public class Server
         }
     }
 
-    public static List<Movie> random10(List<Movie> movieList, List<Movie> reccommended)
-    {
+    public static List<Movie> random10(List<Movie> movieList, List<Movie> reccommended) {
         List<Movie> rand10 = new ArrayList<>();
         Random rand = new Random();
         int i = 0;
@@ -478,8 +491,7 @@ public class Server
         return rand10;
     }
 
-    public static String jsonFormatter(Movie m, Boolean isArray)
-    {
+    public static String jsonFormatter(Movie m, Boolean isArray) {
 
         String JSON = "{";
         if (!isArray)
@@ -499,8 +511,7 @@ public class Server
 
     }
 
-    public static String jsonArrayFormatter(ArrayList<String> arrayIn)
-    {
+    public static String jsonArrayFormatter(ArrayList<String> arrayIn) {
 
         String jsonArray = "[ ";
         for (int i = 0; i < arrayIn.size(); i++)
@@ -515,8 +526,7 @@ public class Server
         return jsonArray;
     }
 
-    public static String jsonMovieArrayFormatter(List<Movie> movies)
-    {
+    public static String jsonMovieArrayFormatter(List<Movie> movies) {
         String array = "{\"type\": \"movieArray\", \"movies\": [";
 
         for (int i = 0; i < movies.size(); i++)                                 // this type of for loop is required so the right formatting can be used
@@ -533,8 +543,7 @@ public class Server
         return array;
     }
 
-    public static JsonObject jsonFromString(String jsonObjectStr)
-    {
+    public static JsonObject jsonFromString(String jsonObjectStr) {
         JsonObject object;
         try (JsonReader jsonReader = Json.createReader(new StringReader(jsonObjectStr)))
         {
@@ -544,8 +553,7 @@ public class Server
         return object;
     }
 
-    public static Movie jsonToMovie(JsonObject clientMovie, Boolean update)
-    {
+    public static Movie jsonToMovie(JsonObject clientMovie, Boolean update) {
         Movie m = new Movie();
         if (update)                                                             //if update is true then the id is used as it identifies the movie to be updated. add cant have an id as it is auto incremented by the db
         {
@@ -567,8 +575,7 @@ public class Server
         return m;
     }
 
-    public static ArrayList<String> jsonArrayToArrayList(JsonObject jsonMovie, String arrayName)
-    {
+    public static ArrayList<String> jsonArrayToArrayList(JsonObject jsonMovie, String arrayName) {
         ArrayList<String> newArray = new ArrayList<>();         //initialise arraylist
         JsonArray jsonArray = jsonMovie.getJsonArray(arrayName);  //extract array from json
         for (int i = 0; i < jsonArray.size(); i++)
@@ -589,9 +596,10 @@ public class Server
         userCommands.add("GETWATCHED");
         userCommands.add("FINDBYGENRE");
         userCommands.add("FINDBYGENRES");
+        userCommands.add("FINDBYGENRESTHENDIRECTOR");
 
         userCommands.add("DELETEBYID");//deletes
-         userCommands.add("DELETEBYTITLE");
+        userCommands.add("DELETEBYTITLE");
 
         userCommands.add("WATCH");      //update/adds
         userCommands.add("UPDATEMOVIE");

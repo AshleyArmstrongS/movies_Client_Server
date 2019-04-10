@@ -283,7 +283,7 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Movie m = null;
+        Movie m;
 
         System.out.println("input = " + input);
         ArrayList<Movie> movies = new ArrayList<>();
@@ -354,7 +354,7 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Movie m = null;
+        Movie m;
 
         ArrayList<Movie> movies = new ArrayList<>();
         try
@@ -362,6 +362,75 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
             con = this.getConnection();
 
             String query = "SELECT * FROM movies WHERE genre LIKE ? AND genre LIKE ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, "%" + input + "%");
+            ps.setString(2, "%" + input2 + "%");
+
+            rs = ps.executeQuery();
+            while (rs.next())
+            {
+                int id = rs.getInt("id");
+                String title = rs.getString("title");
+                String genreString = rs.getString("genre");
+                String director = rs.getString("director");
+                String runtime = rs.getString("runtime");
+                String plot = rs.getString("plot");
+                String rating = rs.getString("rating");
+                String format = rs.getString("format");
+                String year = rs.getString("year");
+                String starringString = rs.getString("starring");
+                int copies = rs.getInt("copies");
+                String barcode = rs.getString("barcode");
+                String user_rating = rs.getString("user_rating");
+
+                String[] genreArray = genreString.split(",");
+                String[] starringArray = starringString.split(",");
+                ArrayList<String> genre = new ArrayList<>(Arrays.asList(genreArray));
+                ArrayList<String> starring = new ArrayList<>(Arrays.asList(starringArray));
+
+                m = new Movie(id, title, genre, director, runtime, rating, starring, copies, user_rating);
+                movies.add(m);
+            }
+        } catch (SQLException e)
+        {
+
+            throw new DaoException("findMoviesByGenres() " + e.getMessage());
+        } finally
+        {
+            try
+            {
+                if (rs != null)
+                {
+                    rs.close();
+                }
+                if (ps != null)
+                {
+                    ps.close();
+                }
+                if (con != null)
+                {
+                    freeConnection(con);
+                }
+            } catch (SQLException e)
+            {
+                throw new DaoException("findMoviesByGenres() " + e.getMessage());
+            }
+        }
+        return movies;
+    }
+
+    public List<Movie> findMoviesByGenreThenDirector(String input, String input2) throws DaoException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Movie m;
+
+        ArrayList<Movie> movies = new ArrayList<>();
+        try
+        {
+            con = this.getConnection();
+
+            String query = "SELECT * FROM movies WHERE genre LIKE ? AND director LIKE ?";
             ps = con.prepareStatement(query);
             ps.setString(1, "%" + input + "%");
             ps.setString(2, "%" + input2 + "%");
@@ -459,7 +528,8 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
             }
         }
     }
-     @Override
+
+    @Override
     public void deleteMovieByTitle(String direct) throws DaoException {
         Connection con = null;
         PreparedStatement ps = null;

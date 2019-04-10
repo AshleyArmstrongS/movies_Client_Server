@@ -65,18 +65,22 @@ public class Client {
                             runWatch(socket);                                   //runs the method to watch a movie adding it and the user to the db
                             break;
                         //
-                        case "FindByGenres":
+                        case "FINDBYGENRES":
                             runFindByMultiple(socket, userCommandInput);        //runs the method to find movies by more than one variable
+                            break;
+                        case "FINDBYGENRESTHENDIRECTOR":
+                            runFindByMultiple(socket, userCommandInput);                                  //runs the method to find movies by more than one variable
                             break;
                         case "DELETEBYID":
                             deleteById(socket);                                  //runs the method to delete a movie from the db
                             break;
-                            case "DELETEBYTITLE":
+                        case "DELETEBYTITLE":
                             deleteByTitle(socket);                                  //runs the method to delete a movie from the db
                             break;
                         default:
                             runSingleFinds(socket, userCommandInput);           //runs the method to get a findby from the server. takes in the user command to determine the findbytype
                             break;
+
                     }
                 }
                 else                                                            //print out if user command is invalid
@@ -281,7 +285,7 @@ public class Client {
         System.out.println("Enter the variable to find by");
         String findByVariable2 = in.nextLine();                      //takes in variable used to identify the movie i.e(id,title)
 
-        String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable1\": \"" + findByVariable1 + "\"\",\"findByVariable1\": \"" + findByVariable2 + "}"; //create json string, is short so no need for a formatter
+        String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable1\": \"" + findByVariable1 + "\",\"findByVariable1\": \"" + findByVariable2 + "\"}"; //create json string, is short so no need for a formatter
         socketWriter.println(sendToServer);                         //sends the json to the server
     }
 
@@ -297,7 +301,7 @@ public class Client {
         socketWriter.println(sendToServer);                         //sends the json to the server                             //extract the return and prints the message
     }
 
-     public static void deleteByTitle(Socket socket) throws IOException {
+    public static void deleteByTitle(Socket socket) throws IOException {
         Scanner in = new Scanner(System.in);                        //keyboard
         OutputStream os = socket.getOutputStream();                 //To server
         PrintWriter socketWriter = new PrintWriter(os, true);       //Writes to the socket
@@ -309,7 +313,7 @@ public class Client {
         socketWriter.println(sendToServer);                         //sends the json to the server                             //extract the return and prints the message
 
     }
-     
+
     public static JsonObject jsonFromString(String jsonObjectStr) {
 
         JsonObject object;                      //initialize
@@ -358,7 +362,7 @@ public class Client {
     public static ArrayList<String> jsonArrayToArrayList(JsonObject jsonMovie, String arrayName) {
         ArrayList<String> newArray = new ArrayList<>();         //initialise arraylist
         JsonArray jsonArray = jsonMovie.getJsonArray(arrayName);  //extract array from json 
-          for (JsonValue jsonArr : jsonArray)
+        for (JsonValue jsonArr : jsonArray)
         {
             newArray.add(jsonArr.toString());               // adds to the arraylist from the json array
         }
@@ -398,23 +402,23 @@ public class Client {
     }
 
     public static String printMovieReturn(JsonObject jsonMovie) {
-      String genre="";
-      String starring="";
-        for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "genre").size(); i++){
+        String genre = "";
+        String starring = "";
+        for (int i = 0; i < jsonArrayToArrayList(jsonMovie, "genre").size(); i++)
+        {
             genre = genre + jsonArrayToArrayList(jsonMovie, "genre").get(i)
-            + ", ";
-            
+                    + ", ";
+
         }
-        for(int i= 0; i<jsonArrayToArrayList(jsonMovie, "starring").size(); i++){
-          starring = starring + jsonArrayToArrayList(jsonMovie, "starring").get(i)
-                  + ", ";
-            
+        for (int i = 0; i < jsonArrayToArrayList(jsonMovie, "starring").size(); i++)
+        {
+            starring = starring + jsonArrayToArrayList(jsonMovie, "starring").get(i)
+                    + ", ";
+
         }
         return "Title: " + jsonMovie.getString("title") + ", Genres: " + genre + " Starring: " + starring + " Runtime: " + jsonMovie.getString("runtime")
                 + ", Director: " + jsonMovie.getString("director") + ", Rating: " + jsonMovie.getString("rating") + ", Copies: " + jsonMovie.getString("copies") + ", User rating: " + jsonMovie.getString("user_rating");
     }
-        
-
 
     public static ArrayList<String> userCommands() {
 
@@ -427,14 +431,15 @@ public class Client {
         userCommands.add("GETWATCHED");
         userCommands.add("FINDBYGENRE");
         userCommands.add("FINDBYGENRES");
-        
+        userCommands.add("FINDBYGENRESTHENDIRECTOR");
+
         userCommands.add("DELETEBYID");//deletes
-         userCommands.add("DELETEBYTITLE");
-         
+        userCommands.add("DELETEBYTITLE");
+
         userCommands.add("WATCH");      //update/adds
         userCommands.add("UPDATEMOVIE");
         userCommands.add("ADDMOVIE");
-        
+
         userCommands.add("EXIT");//exit
 
         return userCommands;

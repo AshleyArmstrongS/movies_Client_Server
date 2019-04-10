@@ -20,6 +20,8 @@ public interface MovieDaoInterface {
     public List<Movie> findMoviesByGenre(String genre) throws DaoException;
 
     public List<Movie> findMoviesByGenres(String genre, String genre2) throws DaoException;
+    
+    public List<Movie> findMoviesByGenreThenDirector(String genre, String genre2) throws DaoException;
 
     public void addMovie(Movie m) throws DaoException;
 
