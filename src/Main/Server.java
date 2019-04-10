@@ -111,7 +111,7 @@ public class Server {
                     System.out.println(message);
                     /*
                     String is taken from the client in json format, all input contains a key called "serverCommand",
-                    this selects the function on the server end.                  
+                    this selects the function on the server end.
                      */
                     String returnToClient;
                     MovieDaoInterface IMovieDao = new MySqlMovieDao();
@@ -148,10 +148,10 @@ public class Server {
                                 returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
                                 break;
                             case "FINDBYGENRES":
-                                returnToClient = findByGenres(fromClient, IMovieDao);
+                                returnToClient = runMultiFindBys(fromClient, IMovieDao);
                                 break;
                             case "FINDBYGENRETHENDIRECTOR":
-                                returnToClient = findByGenresAndDirector(fromClient, IMovieDao);
+                                returnToClient = runMultiFindBys(fromClient, IMovieDao);
                                 break;
                             default:
                                 returnToClient = runFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
@@ -287,9 +287,25 @@ public class Server {
         }
     }
 
-    public static String findByGenres(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
-        String findByVariable1 = fromClient.getString("findByVariable1");
-        String findByVariable2 = fromClient.getString("findByVariable2");
+    public static String runMultiFindBys(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
+        String serverCommand = fromClient.getString("serverCommand");                  //get find by type
+        String findByVariable1 = fromClient.getString("findByVariable1").trim();
+        String findByVariable2 = fromClient.getString("findByVariable2").trim();         //get variable to find by
+        String movie = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
+
+            switch (serverCommand)
+            {
+                case "FINDBYGENRES":
+                    movie = findByGenres(findByVariable1, findByVariable2, IMovieDao);
+                    break;
+                case "FINDBYTITLE":
+                    movie = findByGenreThenDirector(findByVariable1, findByVariable2, IMovieDao);
+                    break;
+            }
+        return movie;
+    }
+
+    public static String findByGenres(String findByVariable1, String findByVariable2, MovieDaoInterface IMovieDao) throws DaoException {
 
         List<Movie> movies = IMovieDao.findMoviesByGenres(findByVariable1, findByVariable2); //gets the movies
         if (!movies.isEmpty())                                                  //checks if the list is empty
@@ -302,9 +318,7 @@ public class Server {
         }
     }
 
-    public static String findByGenresAndDirector(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
-        String findByVariable1 = fromClient.getString("findByVariable1");
-        String findByVariable2 = fromClient.getString("findByVariable2");
+    public static String findByGenreThenDirector(String findByVariable1, String findByVariable2,MovieDaoInterface IMovieDao) throws DaoException {
 
         List<Movie> movies = IMovieDao.findMoviesByGenreThenDirector(findByVariable1, findByVariable2); //gets the movies
         if (!movies.isEmpty())                                                  //checks if the list is empty
