@@ -147,10 +147,10 @@ public class Server {
                             case "WATCH":
                                 returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
                                 break;
-                                case "FINDBYGENRES":
+                            case "FINDBYGENRES":
                                 returnToClient = findByGenres(fromClient, IMovieDao);
                                 break;
-                                case "FINDBYGENRESTHENDIRECTOR":
+                            case "FINDBYGENRETHENDIRECTOR":
                                 returnToClient = findByGenresAndDirector(fromClient, IMovieDao);
                                 break;
                             default:
@@ -287,34 +287,36 @@ public class Server {
         }
     }
 
-    public static String findByGenres(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException{
+    public static String findByGenres(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
         String findByVariable1 = fromClient.getString("findByVariable1");
-        String findByVariable2 = fromClient.getString("findByVariable2");    
-                
-        List<Movie> movies = IMovieDao.findMoviesByGenres(findByVariable1,findByVariable2); //gets the movies
-         if (!movies.isEmpty())                                                  //checks if the list is empty
+        String findByVariable2 = fromClient.getString("findByVariable2");
+
+        List<Movie> movies = IMovieDao.findMoviesByGenres(findByVariable1, findByVariable2); //gets the movies
+        if (!movies.isEmpty())                                                  //checks if the list is empty
         {
             return jsonMovieArrayFormatter(movies);                             //returns as an array as multiple are likely to be returned
         }
         else
         {
-            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genres " + findByVariable1 + "\" and \""+ findByVariable2 +"}";
+            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genres " + findByVariable1 + "\" and \"" + findByVariable2 + "\"}";
         }
     }
-     public static String findByGenresAndDirector(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException{
-           String findByVariable1 = fromClient.getString("findByVariable1");
-        String findByVariable2 = fromClient.getString("findByVariable2");    
-                
-        List<Movie> movies = IMovieDao.findMoviesByGenreThenDirector(findByVariable1,findByVariable2); //gets the movies
-         if (!movies.isEmpty())                                                  //checks if the list is empty
+
+    public static String findByGenresAndDirector(JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
+        String findByVariable1 = fromClient.getString("findByVariable1");
+        String findByVariable2 = fromClient.getString("findByVariable2");
+
+        List<Movie> movies = IMovieDao.findMoviesByGenreThenDirector(findByVariable1, findByVariable2); //gets the movies
+        if (!movies.isEmpty())                                                  //checks if the list is empty
         {
             return jsonMovieArrayFormatter(movies);                             //returns as an array as multiple are likely to be returned
         }
         else
         {
-            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genres " + findByVariable1 + "\" and director\""+ findByVariable2 +"}";
-        } 
+            return "{\"type\": \"message\", \"message\": \"Couldnt find any movies with the genre " + findByVariable1 + " and director " + findByVariable2 + "\"}";
+        }
     }
+
     public static String updateMovie(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao) throws DaoException {
         Movie m = jsonToMovie(fromClient, true);
         IMovieDao.updateMovie(m);                                               //runs the update on the movie
@@ -596,7 +598,7 @@ public class Server {
         userCommands.add("GETWATCHED");
         userCommands.add("FINDBYGENRE");
         userCommands.add("FINDBYGENRES");
-        userCommands.add("FINDBYGENRESTHENDIRECTOR");
+        userCommands.add("FINDBYGENRETHENDIRECTOR");
 
         userCommands.add("DELETEBYID");//deletes
         userCommands.add("DELETEBYTITLE");

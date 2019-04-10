@@ -419,6 +419,7 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
         return movies;
     }
 
+    @Override
     public List<Movie> findMoviesByGenreThenDirector(String input, String input2) throws DaoException {
         Connection con = null;
         PreparedStatement ps = null;
@@ -430,11 +431,11 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
         {
             con = this.getConnection();
 
-            String query = "SELECT * FROM movies WHERE genre LIKE ? AND director LIKE ?";
+            String query = "SELECT * FROM movies WHERE genre LIKE ? AND director = ?";
             ps = con.prepareStatement(query);
             ps.setString(1, "%" + input + "%");
-            ps.setString(2, "%" + input2 + "%");
-
+            ps.setString(2, "" + input2 + "");
+            System.out.println(ps);
             rs = ps.executeQuery();
             while (rs.next())
             {
@@ -463,7 +464,7 @@ public class MySqlMovieDao extends MySqlDao implements MovieDaoInterface {
         } catch (SQLException e)
         {
 
-            throw new DaoException("findMoviesByGenres() " + e.getMessage());
+            throw new DaoException("findMoviesByGenreThenDirector() " + e.getMessage());
         } finally
         {
             try
