@@ -468,8 +468,16 @@ public class Server {
             {
                 movieList.add(IMovieDao.findMovieById(m.getId()));
             }
+            List<String> directors = new ArrayList<>();
+            for(Movie movie : movieList)
+            {
+                directors.add(movie.getDirector());
+            }
 
+            //gets most common genre
+            String mostCommonDirector = IMoviesWatchedDao.mostCommon(directors);
             List<String> genres = new ArrayList<>();
+            
 
             //gets genres of movies watched
             for (Movie movie : movieList)
@@ -481,11 +489,11 @@ public class Server {
             }
 
             //gets most common genre
-            String mostCommon = IMoviesWatchedDao.mostCommonGenre(genres);
-
-            if (movieList.size() < 4)
+            String mostCommonGenre = IMoviesWatchedDao.mostCommon(genres);
+            
+            if (movieList.size() < 2)
             {
-                List<Movie> reccommended = IMovieDao.findMoviesByGenre(mostCommon);
+                List<Movie> reccommended = IMovieDao.findMoviesByGenreThenDirector(mostCommonGenre, mostCommonDirector);
 
                 //recomends 10 random movied in reccommended list
                 List<Movie> rand10 = random10(movieList, reccommended);
@@ -494,8 +502,8 @@ public class Server {
             }
             else
             {
-                String sndMostCommon = IMoviesWatchedDao.sndMostCommonGenre(genres);
-                List<Movie> reccommended = IMovieDao.findMoviesByGenres(mostCommon, sndMostCommon);
+                String sndMostCommon = IMoviesWatchedDao.sndMostCommon(genres);
+                List<Movie> reccommended = IMovieDao.findMoviesByGenres(mostCommonGenre, sndMostCommon);
 
                 List<Movie> rand10 = random10(movieList, reccommended);
 
