@@ -309,7 +309,7 @@ public class Server {
                 case "FINDBYGENRES":
                     movie = findByGenres(findByVariable1, findByVariable2, IMovieDao);
                     break;
-                case "FINDBYTITLE":
+                case "FINDBYGENRETHENDIRECTOR":
                     movie = findByGenreThenDirector(findByVariable1, findByVariable2, IMovieDao);
                     break;
             }
@@ -639,5 +639,4 @@ public class Server {
         return userCommands;
 
     }
-
 }
