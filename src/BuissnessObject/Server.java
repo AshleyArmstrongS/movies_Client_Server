@@ -120,8 +120,9 @@ public class Server {
                     JsonObject fromClient = jsonFromString(message);
                     String serverCommand = fromClient.getString("serverCommand");//extracts the command given by the client
                     System.out.println(serverCommand);                          // prints the command from the client side to be used on the server
-
-                    if (userCommands().contains(serverCommand))                 //checks if the given command is supported
+                    ArrayList<String> userCommands = userCommands();
+                    
+                    if (userCommands.contains(serverCommand))                 //checks if the given command is supported
                     {
 
                         switch (serverCommand)
