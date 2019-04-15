@@ -43,7 +43,7 @@ public class MySqlMoviesWatchedDao extends MySqlDao implements MoviesWatchedDaoI
     }
 
     @Override
-    public List<MoviesWatched> getMoviesWatched(String username) throws DaoException {
+    public List<MoviesWatched>getMoviesWatched(String username) throws DaoException {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -98,13 +98,13 @@ public class MySqlMoviesWatchedDao extends MySqlDao implements MoviesWatchedDaoI
     }
 
     @Override
-    public String mostCommonGenre(List<String> genres) {
+    public String mostCommon(List<String> variables) {
         HashMap<String, Integer> map = new HashMap<>();
 
-        for (String genre : genres)
+        for (String variable : variables)
         {
-            Integer val = map.get(genre);
-            map.put(genre, val == null ? 1 : val + 1);
+            Integer val = map.get(variable);
+            map.put(variable, val == null ? 1 : val + 1);
         }
 
         Entry<String, Integer> max = null;
@@ -121,7 +121,7 @@ public class MySqlMoviesWatchedDao extends MySqlDao implements MoviesWatchedDaoI
     }
 
     @Override
-    public String sndMostCommonGenre(List<String> genres) {
+    public String sndMostCommon(List<String> genres) {
         HashMap<String, Integer> map = new HashMap<>();
 
         for (String genre : genres)

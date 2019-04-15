@@ -19,7 +19,7 @@ public interface MoviesWatchedDaoInterface {
 
     public List<MoviesWatched> getMoviesWatched(String username) throws DaoException;
 
-    public String mostCommonGenre(List<String> genres);
+    public String mostCommon(List<String> variables);
 
     public String sndMostCommonGenre(List<String> genres);
 }
