@@ -22,7 +22,7 @@ public class MySqlDao {
             con = DriverManager.getConnection(url, username, password);
         } catch (ClassNotFoundException ex1)
         {
-            System.out.println("Failed to find driver class " + ex1.getMessage());
+            System.out.println("Failed to find driver class " + ex1.getMessage()); /**/
             System.exit(1);
         } catch (SQLException ex2)
         {

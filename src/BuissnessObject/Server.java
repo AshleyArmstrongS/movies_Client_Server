@@ -1,4 +1,4 @@
-package Main;
+package BuissnessObject;
 
 import DTOs.Movie;
 import DTOs.MoviesWatched;

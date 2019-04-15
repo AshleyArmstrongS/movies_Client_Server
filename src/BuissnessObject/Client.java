@@ -1,4 +1,4 @@
-package Main;
+package BuissnessObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -297,8 +297,26 @@ public class Client {
         Scanner in = new Scanner(System.in);                        //keyboard
         OutputStream os = socket.getOutputStream();                 //To server
         PrintWriter socketWriter = new PrintWriter(os, true);       //Writes to the socket
+        if (FindByType.equals("RECCOMEND") || FindByType.equals("GETWATCHED"))
+        {
+            runUserSpecific(socket, FindByType);
+        }
+        else
+        {
+            System.out.println("Enter the variable to find by");
+            String findByVariable = in.nextLine();                      //takes in variable used to identify the movie i.e(id,title)
 
-        System.out.println("Enter the variable to find by");
+            String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable\": \"" + findByVariable + "\"}"; //create json string, is short so no need for a formatter
+            socketWriter.println(sendToServer);                         //sends the json to the server
+        }
+    }
+
+    public static void runUserSpecific(Socket socket, String FindByType) throws IOException {
+        Scanner in = new Scanner(System.in);                        //keyboard
+        OutputStream os = socket.getOutputStream();                 //To server
+        PrintWriter socketWriter = new PrintWriter(os, true);       //Writes to the socket
+
+        System.out.println("Please enter username ");
         String findByVariable = in.nextLine();                      //takes in variable used to identify the movie i.e(id,title)
 
         String sendToServer = "{\"serverCommand\": \"" + FindByType + "\",\"findByVariable\": \"" + findByVariable + "\"}"; //create json string, is short so no need for a formatter
