@@ -21,5 +21,5 @@ public interface MoviesWatchedDaoInterface {
 
     public String mostCommon(List<String> variables);
 
-    public String sndMostCommonGenre(List<String> genres);
+    public String sndMostCommon(List<String> genres);
 }
