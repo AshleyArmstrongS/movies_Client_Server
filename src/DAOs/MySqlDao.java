@@ -11,9 +11,9 @@ public class MySqlDao {
     public Connection getConnection() throws DaoException {
 
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:8889/movies";
+        String url = "jdbc:mysql://localhost:3306/movies";
         String username = "root";
-        String password = "root";
+        String password = "";
         Connection con = null;
 
         try
