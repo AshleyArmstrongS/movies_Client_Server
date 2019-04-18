@@ -18,8 +18,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -31,12 +33,26 @@ import javax.json.JsonReader;
  */
 public class Server {
 
+    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Level LOG_LEVEL = Level.INFO;
+    private FileHandler logFile = null;
+
     public static void main(String[] args) {
+        LOGGER.setLevel(LOG_LEVEL);
         Server server = new Server();
         server.start();
     }
 
     public void start() {
+        try
+        {
+            logFile = new FileHandler("Server.log", true);
+        } catch (IOException | SecurityException e)
+        {
+        }
+        logFile.setFormatter(new SimpleFormatter());
+        LOGGER.info("Server starting...");
+
         try
         {
             Cache<String, String> cacheMap = new Cache();
@@ -54,6 +70,7 @@ public class Server {
                 clientNumber++;
 
                 System.out.println("Server: Client " + clientNumber + " has connected.");
+                LOGGER.info("Server: Client "+clientNumber+" has connected.");
 
                 System.out.println("Server: Port# of remote client: " + socket.getPort());
                 System.out.println("Server: Port# of this server: " + socket.getLocalPort());
@@ -108,7 +125,7 @@ public class Server {
             {
                 while ((message = socketReader.readLine()) != null)
                 {
-                    System.out.println(message);
+
                     /*
                     String is taken from the client in json format, all input contains a key called "serverCommand",
                     this selects the function on the server end.
@@ -120,8 +137,9 @@ public class Server {
                     JsonObject fromClient = jsonFromString(message);
                     String serverCommand = fromClient.getString("serverCommand");//extracts the command given by the client
                     System.out.println(serverCommand);                          // prints the command from the client side to be used on the server
+                    LOGGER.info("Server command: "+ serverCommand);
                     ArrayList<String> userCommands = userCommands();
-                    
+
                     if (userCommands.contains(serverCommand))                 //checks if the given command is supported
                     {
 
@@ -163,13 +181,14 @@ public class Server {
                                 break;
                         }
                         System.out.println(returnToClient);
+                        LOGGER.info("Response sent to client.");
                         socketWriter.println(returnToClient);
                         System.out.println("Response sent to client");
-
                     }
                     else
                     {
                         returnToClient = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
+                        LOGGER.info("Response sent to client, COMMAND was not accepted.");
                         socketWriter.println(returnToClient);
                     }
                 }
@@ -179,7 +198,8 @@ public class Server {
                 }
             } catch (IOException | DaoException ex)
             {
-                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.warning("IOException Caught");
+                System.out.println(ex);
             }
             System.out.println("Server: (ClientHandler): Handler for Client " + clientNumber + " is terminating .....");
         }
@@ -469,7 +489,7 @@ public class Server {
                 movieList.add(IMovieDao.findMovieById(m.getId()));
             }
             List<String> directors = new ArrayList<>();
-            for(Movie movie : movieList)
+            for (Movie movie : movieList)
             {
                 directors.add(movie.getDirector());
             }
@@ -477,7 +497,6 @@ public class Server {
             //gets most common genre
             String mostCommonDirector = IMoviesWatchedDao.mostCommon(directors);
             List<String> genres = new ArrayList<>();
-            
 
             //gets genres of movies watched
             for (Movie movie : movieList)
@@ -490,14 +509,17 @@ public class Server {
 
             //gets most common genre
             String mostCommonGenre = IMoviesWatchedDao.mostCommon(genres);
-            
+
             if (movieList.size() < 2)
             {
                 List<Movie> reccommended = IMovieDao.findMoviesByGenreThenDirector(mostCommonGenre, mostCommonDirector);
 
                 //recomends 10 random movied in reccommended list
                 List<Movie> rand10 = random10(movieList, reccommended);
+                for (Movie rand : rand10)
+                {
 
+                }
                 return jsonMovieArrayFormatter(rand10);
             }
             else
@@ -506,7 +528,10 @@ public class Server {
                 List<Movie> reccommended = IMovieDao.findMoviesByGenres(mostCommonGenre, sndMostCommon);
 
                 List<Movie> rand10 = random10(movieList, reccommended);
+                for (Movie rand : rand10)
+                {
 
+                }
                 return jsonMovieArrayFormatter(rand10);
             }
 
