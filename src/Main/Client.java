@@ -47,7 +47,7 @@ public class Client {
                 }
                 System.out.println("\nPlease enter a command: ");
                 String userCommandInput = in.nextLine().toUpperCase().trim();
-                if (userCommands.contains(userCommandInput))        //compares the user value with an arraylist of values to ensure its valid
+                if (userCommands.contains(userCommandInput))                    //compares the user value with an arraylist of values to ensure its valid
                 {
                     switch (userCommandInput)
                     {
@@ -65,18 +65,17 @@ public class Client {
                         case "WATCH":
                             runWatch(socket);                                   //runs the method to watch a movie adding it and the user to the db
                             break;
-                        //
                         case "FINDBYGENRES":
                             runFindByMultiple(socket, userCommandInput);        //runs the method to find movies by more than one variable
                             break;
                         case "FINDBYGENRETHENDIRECTOR":
-                            runFindByMultiple(socket, userCommandInput);                                  //runs the method to find movies by more than one variable
+                            runFindByMultiple(socket, userCommandInput);        //runs the method to find movies by more than one variable
                             break;
                         case "DELETEBYID":
-                            deleteById(socket);                                  //runs the method to delete a movie from the db
+                            deleteById(socket);                                 //runs the method to delete a movie from the db
                             break;
                         case "DELETEBYTITLE":
-                            deleteByTitle(socket);                                  //runs the method to delete a movie from the db
+                            deleteByTitle(socket);                              //runs the method to delete a movie from the db
                             break;
                         default:
                             runSingleFinds(socket, userCommandInput);           //runs the method to get a findby from the server. takes in the user command to determine the findbytype
@@ -91,7 +90,7 @@ public class Client {
                 }
                 if (!dontPrintReturn)
                 {
-                    printRun(socket);                                               //prints the final return for a command from the server
+                    printRun(socket);                                           //prints the final return for a command from the server
                 }
             }
         } catch (IOException e)
