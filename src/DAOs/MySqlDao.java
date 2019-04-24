@@ -1,4 +1,4 @@
-package Daos;
+package DAOs;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,9 +11,9 @@ public class MySqlDao {
     public Connection getConnection() throws DaoException {
 
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/movies";
+        String url = "jdbc:mysql://localhost:8889/movies";
         String username = "root";
-        String password = "";
+        String password = "root";
         Connection con = null;
 
         try

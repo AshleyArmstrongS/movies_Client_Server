@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Daos;
+package DAOs;
 
 import DTOs.MoviesWatched;
 import Exceptions.DaoException;

@@ -1,4 +1,4 @@
-package Daos;
+package DAOs;
 
 import DTOs.MoviesWatched;
 import Exceptions.DaoException;

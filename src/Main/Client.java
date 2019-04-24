@@ -39,12 +39,13 @@ public class Client {
             {
                 dontPrintReturn = false;
                 ArrayList<String> userCommands = userCommands();
-                System.out.print("User Commands   ");
+                System.out.println("\nUser Command");
+                System.out.println("-------------");
                 for (String c : userCommands)
                 {
-                    System.out.print(" : " + c + " : ");
+                    System.out.print(c + "\n");
                 }
-                System.out.println("Please enter a command: ");
+                System.out.println("\nPlease enter a command: ");
                 String userCommandInput = in.nextLine().toUpperCase().trim();
                 if (userCommands.contains(userCommandInput))                    //compares the user value with an arraylist of values to ensure its valid
                 {
@@ -424,7 +425,7 @@ public class Client {
         String movies = "";
         for (JsonValue jsonMovie : jsonArray)
         {
-            movies = movies + " : " + printMovieReturn(jsonMovie.asJsonObject()) + " : \n";
+            movies = movies + printMovieReturn(jsonMovie.asJsonObject()) + "\n";
         }
         return movies;
     }
@@ -444,8 +445,8 @@ public class Client {
                     + ", ";
 
         }
-        return "Title: " + jsonMovie.getString("title") + ", Genres: " + genre + " Starring: " + starring + " Runtime: " + jsonMovie.getString("runtime")
-                + ", Director: " + jsonMovie.getString("director") + ", Rating: " + jsonMovie.getString("rating") + ", Copies: " + jsonMovie.getString("copies") + ", User rating: " + jsonMovie.getString("user_rating");
+        return "\nTitle: " + jsonMovie.getString("title") + ",\nGenres: " + genre + " \nStarring: " + starring + " \nRuntime: " + jsonMovie.getString("runtime")
+                + ",\nDirector: " + jsonMovie.getString("director") + ",\nRating: " + jsonMovie.getString("rating") + ",\nCopies: " + jsonMovie.getString("copies") + ",\nUser rating: " + jsonMovie.getString("user_rating");
     }
 
     public static ArrayList<String> userCommands() {
