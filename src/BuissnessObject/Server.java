@@ -140,6 +140,7 @@ public class Server {
                     System.out.println(serverCommand);                          // prints the command from the client side to be used on the server
                     LOGGER.info("Server command: " + serverCommand);
 
+                    
                     ArrayList<String> userCommands = userCommands();
 
                     if (userCommands.contains(serverCommand))                 //checks if the given command is supported
