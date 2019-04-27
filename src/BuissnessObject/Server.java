@@ -70,7 +70,7 @@ public class Server {
                 clientNumber++;
 
                 System.out.println("Server: Client " + clientNumber + " has connected.");
-                LOGGER.info("Server: Client "+clientNumber+" has connected.");
+                LOGGER.info("Server: Client " + clientNumber + " has connected.");
 
                 System.out.println("Server: Port# of remote client: " + socket.getPort());
                 System.out.println("Server: Port# of this server: " + socket.getLocalPort());
@@ -136,8 +136,10 @@ public class Server {
 
                     JsonObject fromClient = jsonFromString(message);
                     String serverCommand = fromClient.getString("serverCommand");//extracts the command given by the client
+                    Boolean clearCache = false;
                     System.out.println(serverCommand);                          // prints the command from the client side to be used on the server
-                    LOGGER.info("Server command: "+ serverCommand);
+                    LOGGER.info("Server command: " + serverCommand);
+
                     ArrayList<String> userCommands = userCommands();
 
                     if (userCommands.contains(serverCommand))                 //checks if the given command is supported
@@ -145,34 +147,27 @@ public class Server {
 
                         switch (serverCommand)
                         {
-                            // closes socket to end the server
-                            case "CLOSESOCKET":
-                                socketClose = true;
-                                returnToClient = "{\"type\" : \"message\", \"message\" : \"Server Socket closed\"}";
-                                break;
                             // deletes a movie from the database
                             case "DELETEBYID":
                                 returnToClient = deletebyId(cacheMap, fromClient, IMovieDao);
-                                cacheMap.clearCache();
+                                clearCache = true;
                                 break;
                             // adds a movie to the database
                             case "ADDMOVIE":
                                 returnToClient = addNewMovie(cacheMap, fromClient, IMovieDao);
-                                cacheMap.clearCache();
+                                clearCache = true;
                                 break;
                             // updates an exsisting movie in the database, is the second call made in updating a movie
                             case "UPDATEMOVIETWO":
                                 returnToClient = updateMovie(cacheMap, fromClient, IMovieDao);
-                                cacheMap.clearCache();
+                                clearCache = true;
                                 break;
                             // adds a movie/user to the watchedmovies table
                             case "WATCH":
                                 returnToClient = watch(fromClient, IMoviesWatchedDao, IMovieDao);
-                                cacheMap.clearCache();
+                                clearCache = true;
                                 break;
                             case "FINDBYGENRES":
-                                returnToClient = runMultiFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
-                                break;
                             case "FINDBYGENRETHENDIRECTOR":
                                 returnToClient = runMultiFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
                                 break;
@@ -180,10 +175,16 @@ public class Server {
                                 returnToClient = runFindBys(cacheMap, fromClient, IMovieDao, IMoviesWatchedDao);
                                 break;
                         }
-                        System.out.println(returnToClient);
+
+                        if (clearCache = true)
+                        {
+                            cacheMap.clearCache();                              //handles clearing out of the cache
+                            LOGGER.info("Cache has been cleared.");
+                        }
+
                         LOGGER.info("Response sent to client.");
-                        socketWriter.println(returnToClient);
-                        System.out.println("Response sent to client");
+                        socketWriter.println(returnToClient);                   //returns info to client
+
                     }
                     else
                     {
@@ -208,11 +209,10 @@ public class Server {
     public static String runFindBys(Cache c, JsonObject fromClient, MovieDaoInterface IMovieDao, MoviesWatchedDaoInterface IMoviesWatchedDao) throws DaoException {
         String serverCommand = fromClient.getString("serverCommand");                  //get find by type
         String findByVariable = fromClient.getString("findByVariable").trim();         //get variable to find by
-        String movie = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
+        String movie;
 
         if (c.checkCache(fromClient.toString()))
         {
-            System.out.println("Got from cache");
             return (String) c.returnFromCache(fromClient.toString());
         }
         else
@@ -238,6 +238,7 @@ public class Server {
                     movie = getWatchedMovies(findByVariable, IMovieDao, IMoviesWatchedDao);
                     break;
                 default:
+                    movie = "{\"type\": \"message\", \"message\": \"Command  was not accpeted\"}";
                     break;
             }
             System.out.println("Got from database");
@@ -667,9 +668,6 @@ public class Server {
         userCommands.add("WATCH");      //update/adds
         userCommands.add("UPDATEMOVIE");
         userCommands.add("ADDMOVIE");
-
-        userCommands.add("EXIT");//exit
-
         return userCommands;
 
     }
